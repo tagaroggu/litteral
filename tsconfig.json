@@ -1,0 +1,6 @@
+{
+    "extends": ["@tagaroggu/ts/tsconfig.json"],
+    "compilerOptions": {
+        "moduleResolution": "Bundler"
+    }
+}

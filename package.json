@@ -1,0 +1,24 @@
+{
+  "name": "litteral",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Use lit-html templates in vue and vice-versa",
+  "main": "index.js",
+  "scripts": {
+    "dev": "serve --symlinks test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@tagaroggu/ts": "github:tagaroggu/ts#v0.1.0",
+    "lit-html": "^2.8.0",
+    "serve": "^14.2.0",
+    "typescript": "^5.1.6",
+    "vue": "^3.3.4"
+  },
+  "peerDependencies": {
+    "lit-html": "^2.8.0",
+    "vue": "^3.3.4"
+  }
+}
