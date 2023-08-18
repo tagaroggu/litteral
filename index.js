@@ -1,6 +1,7 @@
 import { render as vRender, ref, effect, stop, h, defineComponent, withDirectives } from 'vue';
 import { render as lRender, noChange } from 'lit-html';
 import { AsyncDirective, directive, PartType } from 'lit-html/async-directive.js';
+import { isTemplateResult } from 'lit-html/directive-helpers.js'
 
 /**
  * @type {import('vue').FunctionDirective}
@@ -16,9 +17,24 @@ export const litHTMLWrapper = (el, binding) => {
 }
 
 export const LitHTMLWrapperComponent = defineComponent({
-    props: ['template'],
+    props: {
+        template: {
+            validator(value) {
+                return (typeof value === 'object'
+                    && Array.isArray(value)
+                    && typeof value[0] === 'function') || 
+                (typeof value === 'function') ||
+                (isTemplateResult(value));
+            },
+            required: true
+        },
+        is: {
+            type: String,
+            default: 'div'
+        }
+    },
     setup(props, ctx) {
-        return () => withDirectives(h('div'), [[litHTMLWrapper, typeof props.template === 'function' ? [props.template, ctx.attrs] : props.template]])
+        return () => withDirectives(h(props.is), [[litHTMLWrapper, typeof props.template === 'function' ? [props.template, ctx.attrs] : props.template]])
     }
 });
 

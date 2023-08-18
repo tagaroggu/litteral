@@ -22,7 +22,19 @@ import litTemplate from 'a-different-file.js';
 </script>
 
 <template>
-    <div vWrapper="litTemplate" />
+    <div vWrapper="litTemplate"></div>
+</template>
+```
+
+With `litHTMLWrapperComponent`:
+```vue
+<script setup>
+    import { litHTMLWrapperComponent } from 'litteral';
+    import content from './content.js';
+</script>
+<template>
+    <!-- Optional is prop to control what element to create to render into. Defaults to div -->
+    <litHTMLWrapperComponent is="main" :template="content" />
 </template>
 ```
 
