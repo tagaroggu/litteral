@@ -38,4 +38,12 @@ With `litHTMLWrapperComponent`:
 </template>
 ```
 
-This currently is a simple working version. A facade component factory function that wraps a function that returns a lit-html template is planned. Support for passing around children is also planned.
+## Facade
+The exported `Facade` function takes a component definition that is the same as the object-based one used by Vue, except with 2 differences:
+1. Requirement to use `render` method, not to return render function from `setup`,
+2. Return a lit-html template from `render`, and
+3. Optionally, set the `is` prop to change what element is created to render into.
+
+The `Facade` function simply wraps around `render` and returns a component definition object that is usable by vue.
+
+This currently is a simple working version.

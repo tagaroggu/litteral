@@ -3,16 +3,27 @@ import { render as lRender, noChange } from 'lit-html';
 import { AsyncDirective, directive, PartType } from 'lit-html/async-directive.js';
 import { isTemplateResult } from 'lit-html/directive-helpers.js'
 
+/** @type {Map<HTMLElement, import('vue').ReactiveEffectRunner>} */
+const litHTMLWrapperMap = new Map();
+
 /**
- * @type {import('vue').FunctionDirective}
+ * @type {import('vue').Directive}
  */
-export const litHTMLWrapper = (el, binding) => {
-    if (Array.isArray(binding.value)) {
-        lRender(binding.value[0](binding.value[1]), el);
-    } else if (typeof binding.value === 'function') {
-        lRender(binding.value(), el);
-    } else {
-        lRender(binding.value, el);
+export const litHTMLWrapper = {
+    beforeMount(el, binding) {
+        litHTMLWrapperMap.set(el, effect(() => {
+            if (Array.isArray(binding.value)) {
+                lRender(binding.value[0](binding.value[1]), el);
+            } else if (typeof binding.value === 'function') {
+                lRender(binding.value(), el);
+            } else {
+                lRender(binding.value, el);
+            }
+        }));
+    },
+    beforeUnmount(el) {
+        stop(/** @type { import('vue').ReactiveEffectRunner } */(litHTMLWrapperMap.get(el)));
+        litHTMLWrapperMap.delete(el);
     }
 }
 
@@ -97,3 +108,13 @@ export class VueWrapper extends AsyncDirective {
 }
 
 export const vueWrapper = directive(VueWrapper);
+
+/** @param {import('vue').Component & { render(arg0: any): import('lit-html').TemplateResult<1>, is?: string }} definition */
+export function Facade(definition) {
+    return Object.assign({}, definition, {
+        /** @param {any} props */
+        render(props) {
+            return withDirectives(h(definition.is || 'div'), [[litHTMLWrapper, [definition.render, props]]])
+        }
+    });
+}
