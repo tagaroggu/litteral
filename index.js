@@ -1,4 +1,4 @@
-import { render as vRender, ref, effect, stop, h, defineComponent, withDirectives } from 'vue';
+import { render as vRender, ref, effect, stop, h, defineComponent, withDirectives, unref, toValue } from 'vue';
 import { render as lRender, noChange } from 'lit-html';
 import { AsyncDirective, directive, PartType } from 'lit-html/async-directive.js';
 import { isTemplateResult } from 'lit-html/directive-helpers.js'
@@ -12,12 +12,13 @@ const litHTMLWrapperMap = new Map();
 export const litHTMLWrapper = {
     beforeMount(el, binding) {
         litHTMLWrapperMap.set(el, effect(() => {
-            if (Array.isArray(binding.value)) {
-                lRender(binding.value[0](binding.value[1]), el);
-            } else if (typeof binding.value === 'function') {
-                lRender(binding.value(), el);
-            } else {
-                lRender(binding.value, el);
+            let template = toValue(binding.value);
+            if (Array.isArray(template)) {
+                lRender(template[0](template[1]), el);
+            } else /*if (typeof template === 'function') {
+                lRender(template.value(), el);
+            } else */{ // Remove a chunk just by letting toValue handle whether template is a function or a TemplateResult
+                lRender(toValue(template.value), el);
             }
         }));
     },

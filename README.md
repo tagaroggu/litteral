@@ -47,3 +47,31 @@ The exported `Facade` function takes a component definition that is the same as 
 The `Facade` function simply wraps around `render` and returns a component definition object that is usable by vue.
 
 This currently is a simple working version.
+
+```js
+// litComponent.js
+import { Facade } from 'litteral';
+import { html } from 'lit-html';
+
+export const litComponent = Facade({
+    props: {
+        name: {
+            type: String,
+            default: 'World'
+        }
+    },
+    render(data) {
+        return html`<h1>Hello, ${data.name}!</h1>`
+    }
+})
+
+// vueComponent.js
+import { h } from 'vue';
+import { litComponent } from './litComponent.js';
+
+export const vueComponent = {
+    render() {
+        return h(Facade, { name: 'Alice' })
+    }
+}
+```

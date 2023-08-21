@@ -1,4 +1,4 @@
-import { render as vRender, h, ref, withDirectives, createApp, effect } from 'vue';
+import { render as vRender, h, ref, withDirectives, createApp, effect, provide } from 'vue';
 import { html } from 'lit-html';
 import { LitHTMLWrapperComponent, vueWrapper, Facade } from './litteral.js';
 // @ts-ignore
@@ -24,7 +24,7 @@ const vueComponent = {
  * @param {{ count: import('vue').Ref<number> }} param0 
  * @returns 
  */
-const litHTMLComponent = ({ count }) => html`<h2>Hello from lit-html inside vue. ${count.value}</h2><div ${vueWrapper(vueComponent, { count: count })}></div>`;
+const litHTMLComponent = ({ count }) => html`<h2>Hello from lit-html inside vue. ${count.value}</h2><div ${vueWrapper(vueComponent, { count })}></div>`;
 
 const vueApp = {
     setup() {
